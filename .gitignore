@@ -25,3 +25,9 @@ __pycache__/
 dist/
 .venv/
 .pytest_cache/
+
+# FORTRAN build artifacts
+datcom_fortran
+output.dat
+for013.dat
+for014.dat
