@@ -1,0 +1,14 @@
+Metadata-Version: 2.4
+Name: pydatcom
+Version: 0.1.0
+Summary: Python translation of USAF Digital DATCOM (1970s FORTRAN) for aircraft preliminary aerodynamic estimation
+License-Expression: Unlicense
+Requires-Python: >=3.9
+License-File: COPYING
+Requires-Dist: numpy>=1.21
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.0; extra == "dev"
+Dynamic: license-file
+
+This project is a modified version of the publically released USAF aircraft datcom. The goal of the project is to update the code and make it more usable by the end user.
