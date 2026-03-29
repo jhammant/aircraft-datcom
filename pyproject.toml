@@ -4,11 +4,24 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pydatcom"
-version = "0.1.0"
+version = "0.2.0"
 description = "Python translation of USAF Digital DATCOM (1970s FORTRAN) for aircraft preliminary aerodynamic estimation"
-readme = "README"
+readme = "pydatcom/README.md"
 license = "Unlicense"
 requires-python = ">=3.9"
+keywords = ["aerodynamics", "datcom", "aircraft", "stability", "control", "aerospace"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
 dependencies = [
     "numpy>=1.21",
 ]
@@ -18,6 +31,9 @@ dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
 ]
+
+[project.scripts]
+pydatcom = "pydatcom.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["pydatcom*"]

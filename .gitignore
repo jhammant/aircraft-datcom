@@ -16,3 +16,12 @@ Makefile.in
 tags
 .*.swp
 build*
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+*.egg
+dist/
+.venv/
+.pytest_cache/
