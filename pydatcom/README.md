@@ -68,6 +68,171 @@ pydatcom parse data/sprob.in
 pydatcom run data/sprob.in
 ```
 
+## API Reference
+
+### Atmosphere
+
+#### `standard_atmosphere(z: float) -> AtmosphereResult`
+
+Compute US Standard Atmosphere 1962 properties at geometric altitude *z* (ft).
+Returns pressure, temperature, density, speed of sound, and all gradients.
+Raises `ValueError` for altitudes outside [-16 404, 2 296 588] ft.
+
+```python
+atm = standard_atmosphere(35000)
+atm.temperature   # 394.06 deg R
+atm.pressure       # 499.34 lb/ft^2
+atm.density        # 7.38e-4 slugs/ft^3
+atm.speed_of_sound # 973.14 ft/s
+```
+
+#### `sea_level_properties() -> AtmosphereResult`
+
+Shorthand for `standard_atmosphere(0.0)`.
+
+### Flight Condition
+
+#### `flight_condition(altitude_ft, mach) -> FlightCondition`
+
+Compute V, q, Re/ft, viscosity from altitude and Mach.
+Raises `ValueError` for negative Mach.
+
+```python
+fc = flight_condition(30000, 0.8)
+fc.velocity          # ft/s
+fc.dynamic_pressure  # lb/ft^2
+fc.reynolds_per_ft   # Re per foot
+fc.viscosity         # slug/(ft*s)
+```
+
+#### `reynolds_number(fc, ref_length_ft) -> float`
+
+Reynolds number for a given reference length.
+
+### Geometry
+
+#### `WingGeometry(chord_root, semi_span_i, semi_span_o, total_semi_span, chord_inboard, chord_tip, ...)`
+
+Compute wing planform geometry (area, AR, taper, MAC, spanwise MAC station).
+Supports single-panel and cranked (inboard+outboard) configurations.
+Raises `ValueError` for negative chords/spans or impossible geometry.
+
+Computed attributes: `area_total`, `aspect_ratio`, `taper_ratio_total`,
+`mac_total`, `y_mac_total`, `area_exposed`, and per-panel values.
+
+#### `BodyGeometry(x_stations, cross_sections, perimeters, radii, base_area=0, nose_type='ogive')`
+
+Compute body geometry from station arrays.
+Raises `ValueError` for < 2 stations or mismatched array lengths.
+
+Computed attributes: `length`, `max_cross_section`, `fineness_ratio`,
+`max_diameter`, `base_diameter`.
+
+#### `compute_nose_length(x_stations, cross_sections) -> float`
+
+Find the station where cross-section first decreases.
+
+### Lift-Curve Slope
+
+#### `compute_lift_slope(wing, mach, sweep_half_chord_deg=0, section_cl_alpha=2*pi, cl_max_section=1.6) -> LiftSlopeResult`
+
+Compute CL_alpha from geometry using the Helmbold/Polhamus formula.
+Subsonic only -- raises `ValueError` for Mach >= 1.0.
+
+```python
+ls = compute_lift_slope(wing, mach=0.6, sweep_half_chord_deg=25.0)
+ls.cl_alpha_per_rad   # CL_alpha in /rad
+ls.cl_alpha_per_deg   # CL_alpha in /deg
+ls.cl_max             # estimated CL_max
+ls.alpha_cl_max_deg   # alpha at CL_max
+ls.beta               # Prandtl-Glauert factor
+```
+
+### Aerodynamic Coefficients
+
+#### `lift_coefficient(wing, mach, cl_alpha_per_rad, alphas_deg, ...) -> LiftResult`
+
+CL vs alpha. Linear below CL_max, post-stall blending above.
+
+#### `drag_coefficient(wing, mach, reynolds, cl_alpha_per_rad, alphas_deg, cl_array, ...) -> DragResult`
+
+CD = CD0 + CL^2/(pi*AR*e). Skin friction (Karman-Schoenherr) + form factor
++ Oswald efficiency.
+
+#### `moment_coefficient(wing, mach, cl_alpha_per_rad, alphas_deg, cl_array, ...) -> MomentResult`
+
+CM about CG from AC position with Prandtl-Glauert Mach correction.
+
+#### `body_aero(body, mach, reynolds, alphas_deg, ...) -> BodyAeroResult`
+
+Body-alone CL, CD, CM via slender-body theory + Allen-Perkins crossflow.
+Raises `ValueError` for empty alphas or non-positive s_ref.
+
+### Wing-Body Combination
+
+#### `wing_body_aero(...) -> WingBodyResult`
+
+Combined wing-body coefficients using K_W(B) and K_B(W) interference factors
+from DATCOM figures 4.3.1.2-10A/B.
+
+Returns: `cl_alpha_wb`, `k_wb`, `k_bw`, `cd0_wb`, `r_wb`, `x_ac_wb`,
+and arrays `cl_wb`, `cd_wb`, `cm_wb`.
+
+### Flaps
+
+#### `flap_increment(flap_chord_ratio, flap_deflection_deg, cl_alpha_per_rad, ...) -> FlapResult`
+
+Incremental delta_CL, delta_CD, delta_CM from trailing-edge flap deflection.
+Supports plain, split, slotted, and fowler types.
+Raises `ValueError` for invalid geometry or unknown flap type.
+
+### Input Parser
+
+#### `parse_datcom_input(text: str) -> list[DatcomCase]`
+
+Parse a DATCOM input string into a list of cases. Handles `$NAMELIST$`
+groups, control cards, NACA specs, booleans, FORTRAN repeat notation,
+and multi-case inheritance.
+
+#### `parse_datcom_file(path) -> list[DatcomCase]`
+
+Parse from a file path.
+
+### Utilities
+
+#### `table_lookup(x, xtab, ytab) -> float`
+
+1-D linear interpolation with clamped extrapolation (TBFUNX).
+
+#### `table_lookup_2d(x1, x2, x1tab, x2tab, ytab) -> float`
+
+Bilinear interpolation (TLINEX).
+
+#### `table_lookup_3d(x1, x2, x3, x1tab, x2tab, x3tab, ytab) -> float`
+
+Trilinear interpolation (TLIN3X).
+
+#### `trapz(y, x) -> float`
+
+Trapezoidal integration (TRAPZ).
+
+#### `equal_space(x_in, y_in, n_out=20) -> (x_eq, y_eq, dy_dx)`
+
+Redistribute data onto equally-spaced abscissae (EQSPC1).
+
+## Error Handling
+
+All public functions validate inputs and raise `ValueError` with
+descriptive messages:
+
+- Altitude out of range (atmosphere)
+- Negative chords, spans, or zero total span (geometry)
+- Mismatched array lengths (body geometry)
+- Negative Mach number (flight condition)
+- Supersonic Mach in subsonic method (lift slope)
+- Invalid flap geometry or type (flaps)
+- Empty alpha arrays or zero reference area (body aero)
+
 ## Package structure
 
 ```text
@@ -84,35 +249,14 @@ pydatcom/
   input_parser.py       Classic DATCOM input parser   (src/input.f)
   utils.py              Interpolation utilities       (TBFUNX, TLINEX, TLIN3X, TRAPZ)
   cli.py                Command-line interface
-  tests/                92 tests covering all modules
+  tests/                Unit and integration tests
 ```
-
-## What is translated
-
-| FORTRAN subroutine(s) | Python module | Physics |
-|---|---|---|
-| ATMOS | `atmosphere.py` | Full US Std Atm 1962, inverse-square gravity, 9 output quantities |
-| WTGEOM | `geometry.py` | Planform area, AR, taper, MAC, sweep for single/cranked wings |
-| BODYRT (geometry) | `geometry.py` | Body length, max cross-section, fineness ratio |
-| WTLIFT | `lift_slope.py` | Helmbold/Polhamus CL_alpha with Mach, sweep, taper corrections |
-| LIFTCF | `aero.py` | Linear + post-stall CL for straight-tapered wings |
-| CDRAG | `aero.py` | CD0 (skin friction + form factor) + induced drag, Oswald e |
-| CMALPH | `aero.py` | CM from AC position with Prandtl-Glauert correction |
-| BODYRT (aero) | `aero.py` | Slender-body CN_alpha + Allen-Perkins crossflow + base drag |
-| WBLIFT, WBDRAG, WBCM | `wing_body.py` | K_W(B), K_B(W) interference; combined CL, CD, CM |
-| LIFTFP | `flaps.py` | Section effectiveness, K', K_b spanwise correction |
-| INPUT | `input_parser.py` | $NAMELIST$ groups, control cards, NACA specs, multi-case |
-| TBFUNX, TLINEX, TLIN3X, TRAPZ | `utils.py` | 1-D / 2-D / 3-D table interpolation, trapezoidal integration |
 
 ## Testing
 
 ```bash
-pytest pydatcom/tests/ -v
+python -m pytest pydatcom/tests/ -v
 ```
-
-92 tests covering atmosphere, geometry, aero coefficients, flight conditions,
-lift-curve slope, wing-body combination, flap effects, input parsing, and
-end-to-end integration.
 
 ## Reference
 

@@ -131,6 +131,13 @@ def compute_lift_slope(
 
     where A = aspect ratio, beta = sqrt(1-M^2), kappa = Cl_alpha/(2*pi).
     """
+    if mach >= 1.0:
+        raise ValueError(
+            f"Mach {mach} is transonic/supersonic; this subsonic method "
+            f"requires Mach < 1.0.  Use DATCOM MAIN03/MAIN04 paths for "
+            f"transonic and supersonic regimes."
+        )
+
     ar = wing.aspect_ratio
     if ar <= 0:
         return LiftSlopeResult(0.0, 0.0, 0.0, 0.0, 1.0)

@@ -165,6 +165,21 @@ def flap_increment(
     -------
     FlapResult
     """
+    if flap_span_inboard >= flap_span_outboard:
+        raise ValueError(
+            f"flap_span_inboard ({flap_span_inboard}) must be less than "
+            f"flap_span_outboard ({flap_span_outboard})."
+        )
+    if wing_semi_span <= 0:
+        raise ValueError("wing_semi_span must be positive.")
+    if flap_chord_ratio <= 0:
+        raise ValueError("flap_chord_ratio must be positive.")
+    if flap_type not in _FLAP_CD_FACTOR:
+        raise ValueError(
+            f"Unknown flap_type {flap_type!r}. "
+            f"Valid types: {', '.join(_FLAP_CD_FACTOR)}."
+        )
+
     delta_f = flap_deflection_deg
     cfc = np.clip(flap_chord_ratio, 0.01, 0.50)
 

@@ -581,6 +581,13 @@ def body_aero(
     -------
     BodyAeroResult
     """
+    if len(alphas_deg) == 0:
+        raise ValueError("alphas_deg must not be empty.")
+    if s_ref <= 0:
+        raise ValueError(f"s_ref must be positive, got {s_ref}.")
+    if body.fineness_ratio <= 0:
+        raise ValueError("Body fineness ratio must be positive (check geometry).")
+
     # --- Normal-force slope ---
     fn = body.fineness_ratio
     k2_k1 = table_lookup(fn, _FN_RATIO, _K2_K1)

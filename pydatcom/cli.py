@@ -119,21 +119,25 @@ def _cmd_run(args: argparse.Namespace) -> None:
             )
             sweep_deg = wgp.get("SAVSI", 0.0)
             re_mac = reynolds_number(fc, wing.mac_total)
-            ls = compute_lift_slope(wing, mach=mach_val, sweep_half_chord_deg=sweep_deg * 0.6)
 
-            print(f"\n  Wing: AR={wing.aspect_ratio:.2f}, CL_alpha={ls.cl_alpha_per_deg:.4f}/deg, CL_max={ls.cl_max:.2f}")
+            if mach_val >= 1.0:
+                print(f"\n  Wing: AR={wing.aspect_ratio:.2f} (subsonic method not applicable at M={mach_val:.2f})")
+            else:
+                ls = compute_lift_slope(wing, mach=mach_val, sweep_half_chord_deg=sweep_deg * 0.6)
 
-            wl = lift_coefficient(wing, mach=mach_val, cl_alpha_per_rad=ls.cl_alpha_per_rad,
-                                  alphas_deg=alphas, cl_max=ls.cl_max,
-                                  alpha_cl_max_deg=ls.alpha_cl_max_deg, s_ref=s_ref)
-            wd = drag_coefficient(wing, mach=mach_val, reynolds=re_mac,
-                                  cl_alpha_per_rad=ls.cl_alpha_per_rad,
-                                  alphas_deg=alphas, cl_array=wl.cl, s_ref=s_ref)
+                print(f"\n  Wing: AR={wing.aspect_ratio:.2f}, CL_alpha={ls.cl_alpha_per_deg:.4f}/deg, CL_max={ls.cl_max:.2f}")
 
-            print(f"\n  {'Alpha':>8s}  {'CL':>10s}  {'CD':>10s}")
-            print(f"  {'-----':>8s}  {'------':>10s}  {'------':>10s}")
-            for a, cl, cd in zip(alphas, wl.cl, wd.cd):
-                print(f"  {a:8.2f}  {cl:10.4f}  {cd:10.5f}")
+                wl = lift_coefficient(wing, mach=mach_val, cl_alpha_per_rad=ls.cl_alpha_per_rad,
+                                      alphas_deg=alphas, cl_max=ls.cl_max,
+                                      alpha_cl_max_deg=ls.alpha_cl_max_deg, s_ref=s_ref)
+                wd = drag_coefficient(wing, mach=mach_val, reynolds=re_mac,
+                                      cl_alpha_per_rad=ls.cl_alpha_per_rad,
+                                      alphas_deg=alphas, cl_array=wl.cl, s_ref=s_ref)
+
+                print(f"\n  {'Alpha':>8s}  {'CL':>10s}  {'CD':>10s}")
+                print(f"  {'-----':>8s}  {'------':>10s}  {'------':>10s}")
+                for a, cl, cd in zip(alphas, wl.cl, wd.cd):
+                    print(f"  {a:8.2f}  {cl:10.4f}  {cd:10.5f}")
 
         # Body (if present)
         if bod:

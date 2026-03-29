@@ -105,12 +105,19 @@ def flight_condition(altitude_ft: float, mach: float) -> FlightCondition:
     altitude_ft : float
         Geometric altitude, ft.
     mach : float
-        Free-stream Mach number (must be > 0).
+        Free-stream Mach number (must be >= 0).
 
     Returns
     -------
     FlightCondition
+
+    Raises
+    ------
+    ValueError
+        If *mach* is negative.
     """
+    if mach < 0:
+        raise ValueError(f"Mach number must be non-negative, got {mach}.")
     atm = standard_atmosphere(altitude_ft)
     velocity = mach * atm.speed_of_sound
     q = 0.5 * atm.density * velocity ** 2

@@ -147,7 +147,17 @@ def standard_atmosphere(z: float) -> AtmosphereResult:
     -------
     AtmosphereResult
         Dataclass with all nine atmospheric quantities and their gradients.
+
+    Raises
+    ------
+    ValueError
+        If *z* is outside the valid altitude range.
     """
+    if z < -16404.0 or z > 2296588.0:
+        raise ValueError(
+            f"Altitude {z:.0f} ft is outside the valid range "
+            f"[-16404, 2296588] ft for the US Standard Atmosphere 1962."
+        )
     g = G0 * (R0 / (R0 + z)) ** 2
 
     if z <= 295276.0:

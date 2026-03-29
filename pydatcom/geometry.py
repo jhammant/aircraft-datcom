@@ -127,7 +127,24 @@ class WingGeometry:
     y_mac_total: float = field(init=False, default=0.0)
 
     def __post_init__(self):
-        """Translate the geometry kernel of WTGEOM."""
+        """Translate the geometry kernel of WTGEOM.
+
+        Raises
+        ------
+        ValueError
+            If any chord or span is negative, or total_semi_span is zero.
+        """
+        if self.chord_root < 0 or self.chord_tip < 0 or self.chord_inboard < 0:
+            raise ValueError("Chord lengths must be non-negative.")
+        if self.total_semi_span <= 0:
+            raise ValueError("total_semi_span must be positive.")
+        if self.semi_span_i < 0 or self.semi_span_o < 0:
+            raise ValueError("Semi-span values must be non-negative.")
+        if self.semi_span_o > self.total_semi_span:
+            raise ValueError(
+                f"semi_span_o ({self.semi_span_o}) cannot exceed "
+                f"total_semi_span ({self.total_semi_span})."
+            )
         cr = self.chord_root
         si = self.semi_span_i      # AIN(2) -- 0 for single panel
         so = self.semi_span_o      # AIN(3)
@@ -257,8 +274,23 @@ class BodyGeometry:
     max_diameter: float = field(init=False, default=0.0)
 
     def __post_init__(self):
+        """Compute derived body geometry properties.
+
+        Raises
+        ------
+        ValueError
+            If input arrays have mismatched lengths or fewer than 2 stations.
+        """
         xs = self.x_stations
         ss = self.cross_sections
+        n = len(xs)
+        if n < 2:
+            raise ValueError("At least 2 body stations are required.")
+        if len(ss) != n or len(self.perimeters) != n or len(self.radii) != n:
+            raise ValueError(
+                f"All body arrays must have the same length (got x={n}, "
+                f"S={len(ss)}, P={len(self.perimeters)}, R={len(self.radii)})."
+            )
 
         self.length = float(xs[-1])                       # BD(1)
 
