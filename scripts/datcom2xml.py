@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 # Lenna X. Peterson
-# arklenna@gmail.com
+# EMAIL_REMOVED
 
 import sys
 import os
