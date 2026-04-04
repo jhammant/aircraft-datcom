@@ -32,10 +32,10 @@ Digging through the original codebase reveals fascinating historical artifacts:
 ## ⚡ Performance & Accessibility
 
 ### Honest Performance Claims
-- **Python implementation**: ~1-10ms for typical aerodynamic calculations
-- **Rust implementation**: ~0.1-1ms for similar work
-- **Realistic speedup**: 10-50x improvement (not millions!)
-- **WebAssembly**: Browser-ready with excellent performance
+- **Planned Python implementation**: ~1-10ms for typical aerodynamic calculations
+- **Planned Rust implementation**: ~0.1-1ms for similar work
+- **Target speedup**: 10-50x improvement over current Python wrappers
+- **WebAssembly demo**: Already functional in browser with excellent performance
 
 ### The Real Innovation: Democratization
 
@@ -45,203 +45,130 @@ Making 60-year-old aerospace algorithms accessible through modern deployment:
 - **Mobile ready**: Runs on phones and tablets  
 - **Modern integration**: Easy embedding in AI/ML workflows
 
-## 🛠️ Installation & Usage
+## 🛠️ Current Status & Usage
 
-### Python Implementation
-```bash
-# Clone the repository
-git clone https://github.com/jhammant/aircraft-datcom.git
-cd aircraft-datcom/datcom-python
+### ✅ What's Working Right Now
+**Live WebAssembly Demo**: [https://jhammant.github.io/datcom/](https://jhammant.github.io/datcom/)
+- Real-time aircraft configuration analysis
+- Interactive parameter adjustment
+- Professional aerospace interface
+- Mobile-responsive design
 
-# Install dependencies
-pip install -r requirements.txt
+### 🚧 What's In Development
 
-# Install in development mode
-pip install -e .
-```
-
-```python
-import datcom
-
-# Basic aircraft configuration
-aircraft = datcom.Aircraft(
-    wingspan=35.0,           # feet
-    wing_area=174.0,        # square feet
-    wing_sweep=0.0,         # degrees
-    tail_volume=0.5,        # horizontal tail volume coefficient
-    cg_position=25.0        # percent MAC
-)
-
-# Analyze stability and performance
-results = datcom.analyze(aircraft, flight_condition)
-print(f"Static margin: {results.static_margin}% MAC")
-print(f"Neutral point: {results.neutral_point}% MAC") 
-print(f"Stall speed: {results.stall_speed} mph")
-```
-
-### Rust Implementation
-```bash
-# Clone the repository
-git clone https://github.com/jhammant/aircraft-datcom.git
-cd aircraft-datcom/datcom-rs
-
-# Add to your Cargo.toml
-# aircraft-datcom-rs = { path = "../aircraft-datcom/datcom-rs" }
-```
-
-```rust
-use aircraft_datcom_rs::*;
-
-let aircraft = Aircraft::new()
-    .wingspan(35.0)
-    .wing_area(174.0)
-    .wing_sweep(0.0)
-    .cg_position(25.0);
-    
-let results = analyze(&aircraft, &flight_condition);
-println!("Analysis completed in: {:?}", results.computation_time);
-println!("Static margin: {:.1}% MAC", results.static_margin);
-```
-
-### WebAssembly (Browser)
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <script type="module">
-        // Note: WebAssembly package under development
-        // For now, try the live demo at jhammant.github.io/datcom/
-        
-        // Future usage:
-        // import init, { analyze_aircraft } from './pkg/aircraft_datcom.js';
-        
-        // const results = analyze_aircraft({
-        //     wingspan: 35.0,
-        //     wing_area: 174.0,
-        //     wing_sweep: 0.0,
-        //     cg_position: 25.0
-        // });
-    </script>
-</head>
-<body>
-    <h1>Try the live demo: <a href="https://jhammant.github.io/datcom/">jhammant.github.io/datcom/</a></h1>
-</body>
-</html>
-```
-
-## 🎯 What You Can Build
-
-**Educational Applications:**
-- Interactive aerospace engineering textbooks
-- Browser-based design exploration tools  
-- Mobile apps for students and engineers
-- Real-time parameter optimization interfaces
-
-**Preliminary Design Tools:**
-- Web-based aircraft configuration analysis
-- Quick feasibility studies without expensive software
-- Shareable design studies via URLs
-- Integration with modern development frameworks
-
-**Research & Development:**
-- AI/ML training pipelines with validated physics
-- Automated design exploration systems
-- Monte Carlo simulation workflows
-- Modern aerospace startup applications
-
-## 📁 Project Structure
-
-```
-aircraft-datcom/
-├── datcom-python/          # Python implementation (in development)
-│   ├── datcom/            # Core Python module  
-│   ├── tests/             # Validation test suite
-│   ├── requirements.txt   # Python dependencies
-│   └── examples/          # Usage examples
-├── datcom-rs/             # Rust implementation (in development)
-│   ├── src/               # Rust source code
-│   ├── Cargo.toml         # Rust dependencies
-│   ├── benches/           # Performance benchmarks
-│   └── tests/             # Rust test suite
-├── wasm-pkg/              # WebAssembly bindings (planned)
-├── validation/            # Cross-validation against original
-├── docs/                  # Documentation
-└── examples/              # Complete usage examples
-    └── web-demo/          # Live demo source code
-```
-
-## 🚧 Development Status
-
-**Current Status:**
-- ✅ **Live WebAssembly demo** - Functional in browser
-- 🚧 **Python implementation** - Core algorithms in development  
-- 🚧 **Rust implementation** - Performance optimization in progress
-- 📋 **Package distribution** - PyPI/Crates.io packages planned
-
-**Try Now:**
-- **Live Demo**: [jhammant.github.io/datcom/](https://jhammant.github.io/datcom/) - Working WebAssembly interface
-- **Source Code**: Available in this repository for development/contribution
-
-## 🏗️ Heritage & Modern Balance
-
-This project preserves the mathematical accuracy of the original algorithms while making them accessible through modern languages and deployment methods. Every calculation will be validated against the original Fortran to ensure aerospace-grade accuracy.
-
-**The goal:** Democratize aerospace analysis. A garage startup should have access to the same algorithms that Boeing uses.
-
-## 🤝 Contributing
-
-Contributions welcome! This is about preserving and modernizing aerospace heritage for everyone.
-
-### Development Setup
+#### Python Implementation
 ```bash
 # Clone the repository
 git clone https://github.com/jhammant/aircraft-datcom.git
 cd aircraft-datcom
 
-# Python development (when ready)
-cd datcom-python
-pip install -r requirements.txt
-pip install -e .
-# pytest tests/  # When test suite is complete
-
-# Rust development (when ready)  
-cd datcom-rs
-# cargo test    # When implementation is complete
-# cargo bench   # Performance benchmarks
+# Python implementation is currently being developed
+# The core algorithms are being ported from the original Fortran
+# Check back for updates or contribute to development!
 ```
 
-### Contribution Guidelines
-- Maintain mathematical accuracy vs original algorithms
-- Include comprehensive tests for new features
-- Document heritage connections where applicable
-- Preserve the historical significance of the codebase
+#### Rust Implementation  
+```bash
+# Clone the repository
+git clone https://github.com/jhammant/aircraft-datcom.git
+cd aircraft-datcom
 
-## 📊 Validation & Testing
+# Rust implementation is planned for maximum performance
+# Will target sub-millisecond analysis times
+# Contributions welcome for Rust developers!
+```
 
-All implementations will be validated against:
-- Original Fortran reference calculations
-- Published test cases from USAF documentation  
-- Known aircraft configurations (F-16, Cessna 172, etc.)
-- Wind tunnel data correlation studies
+#### Package Distribution
+```bash
+# Planned future releases:
+# pip install aircraft-datcom        # Python package (not yet available)
+# cargo add aircraft-datcom-rs       # Rust crate (not yet available)
+
+# For now, clone the repository and try the live demo!
+```
+
+## 🎯 What You Can Build (With The Live Demo)
+
+**Educational Applications:**
+- Interactive aerospace learning interfaces
+- Real-time design exploration tools
+- Mobile-friendly analysis applications
+
+**Integration Projects:**
+- Embed the demo in educational websites
+- Use as reference for algorithm validation
+- Prototype aerospace analysis workflows
+
+**Research Applications:**
+- Validate preliminary aircraft designs
+- Explore parameter sensitivity
+- Educational demonstrations
+
+## 🏗️ Contributing to Development
+
+This project needs developers to help port the heritage Fortran algorithms:
+
+### Python Developers Needed
+- Port core DATCOM algorithms from Fortran to Python
+- Implement validation test suites
+- Optimize performance while maintaining accuracy
+
+### Rust Developers Needed  
+- Create high-performance Rust implementation
+- Target sub-millisecond analysis times
+- Implement WebAssembly bindings
+
+### Aerospace Engineers Needed
+- Validate algorithms against known aircraft
+- Create comprehensive test cases
+- Document algorithm heritage and significance
+
+## 📁 Repository Structure
+
+```
+aircraft-datcom/
+├── docs/                   # Documentation and heritage info
+├── original-fortran/       # Original USAF Fortran source (reference)
+├── validation/            # Test cases and validation data
+├── web-demo/              # Live demo source code (WebAssembly)
+├── python-impl/           # Python implementation (in development)
+├── rust-impl/             # Rust implementation (planned)
+└── examples/              # Usage examples and tutorials
+```
+
+## 📊 Development Roadmap
+
+**Phase 1: Foundation** ✅
+- ✅ Heritage code analysis and documentation
+- ✅ WebAssembly demonstration interface
+- ✅ Project structure and contribution guidelines
+
+**Phase 2: Core Implementation** 🚧
+- 🚧 Python algorithm porting (in progress)
+- 📋 Rust performance implementation (planned)
+- 📋 Comprehensive validation test suite
+
+**Phase 3: Distribution** 📋
+- 📋 PyPI package publication
+- 📋 Crates.io package publication  
+- 📋 npm WebAssembly package
+- 📋 Documentation website
 
 ## 📜 License
 
 **Public Domain** - These algorithms belong to humanity. The original work was developed with public funds for public benefit.
-
-The mathematical foundations of aerospace engineering should be free and accessible to all.
 
 ## 🌟 Acknowledgments
 
 - **USAF Wright-Patterson AFB** - Original DATCOM development (1960s-80s)
 - **NASA** - Technical documentation and validation data
 - **Aerospace community** - Decades of validation and refinement
-- **Open source contributors** - Modernization and preservation efforts
 
 ## 🔗 Links
 
-- **Live Demo**: [jhammant.github.io/datcom/](https://jhammant.github.io/datcom/) ← **Try it now!**
-- **Documentation**: [Full project documentation](docs/) (in development)
-- **Heritage Info**: [Historical background](docs/heritage.md) (planned)
+- **🚀 Live Demo**: [jhammant.github.io/datcom/](https://jhammant.github.io/datcom/) ← **Try it now!**
+- **📚 Contribute**: Help port heritage algorithms to modern languages
+- **🏛️ Heritage**: Preserve aerospace computing history
 
 ---
 
