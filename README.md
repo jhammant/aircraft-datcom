@@ -49,7 +49,15 @@ Making 60-year-old aerospace algorithms accessible through modern deployment:
 
 ### Python Implementation
 ```bash
-pip install aircraft-datcom
+# Clone the repository
+git clone https://github.com/jhammant/aircraft-datcom.git
+cd aircraft-datcom/datcom-python
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Install in development mode
+pip install -e .
 ```
 
 ```python
@@ -73,7 +81,12 @@ print(f"Stall speed: {results.stall_speed} mph")
 
 ### Rust Implementation
 ```bash
-cargo add aircraft-datcom-rs
+# Clone the repository
+git clone https://github.com/jhammant/aircraft-datcom.git
+cd aircraft-datcom/datcom-rs
+
+# Add to your Cargo.toml
+# aircraft-datcom-rs = { path = "../aircraft-datcom/datcom-rs" }
 ```
 
 ```rust
@@ -96,27 +109,22 @@ println!("Static margin: {:.1}% MAC", results.static_margin);
 <html>
 <head>
     <script type="module">
-        import init, { analyze_aircraft } from './pkg/aircraft_datcom.js';
+        // Note: WebAssembly package under development
+        // For now, try the live demo at jhammant.github.io/datcom/
         
-        async function runAnalysis() {
-            await init();
-            
-            const config = {
-                wingspan: 35.0,
-                wing_area: 174.0,
-                wing_sweep: 0.0,
-                cg_position: 25.0
-            };
-            
-            const results = analyze_aircraft(config);
-            console.log('Real-time analysis results:', results);
-        }
+        // Future usage:
+        // import init, { analyze_aircraft } from './pkg/aircraft_datcom.js';
         
-        runAnalysis();
+        // const results = analyze_aircraft({
+        //     wingspan: 35.0,
+        //     wing_area: 174.0,
+        //     wing_sweep: 0.0,
+        //     cg_position: 25.0
+        // });
     </script>
 </head>
 <body>
-    <h1>Aerospace Analysis in Your Browser</h1>
+    <h1>Try the live demo: <a href="https://jhammant.github.io/datcom/">jhammant.github.io/datcom/</a></h1>
 </body>
 </html>
 ```
@@ -145,33 +153,38 @@ println!("Static margin: {:.1}% MAC", results.static_margin);
 
 ```
 aircraft-datcom/
-├── datcom-python/          # Python implementation & wrapper
-│   ├── datcom/            # Core Python module
+├── datcom-python/          # Python implementation (in development)
+│   ├── datcom/            # Core Python module  
 │   ├── tests/             # Validation test suite
+│   ├── requirements.txt   # Python dependencies
 │   └── examples/          # Usage examples
-├── datcom-rs/             # Rust implementation  
+├── datcom-rs/             # Rust implementation (in development)
 │   ├── src/               # Rust source code
+│   ├── Cargo.toml         # Rust dependencies
 │   ├── benches/           # Performance benchmarks
 │   └── tests/             # Rust test suite
-├── wasm-pkg/              # WebAssembly bindings
-│   ├── src/               # WASM interface code
-│   └── pkg/               # Generated WASM package
+├── wasm-pkg/              # WebAssembly bindings (planned)
 ├── validation/            # Cross-validation against original
-│   ├── test-cases/        # Reference test cases
-│   └── results/           # Validation reports
 ├── docs/                  # Documentation
-│   ├── heritage.md        # Historical background
-│   ├── algorithms.md      # Mathematical foundations
-│   └── api.md             # API reference
 └── examples/              # Complete usage examples
-    ├── basic-analysis.py  # Simple Python example
-    ├── web-demo/          # Browser integration
-    └── jupyter/           # Interactive notebooks
+    └── web-demo/          # Live demo source code
 ```
+
+## 🚧 Development Status
+
+**Current Status:**
+- ✅ **Live WebAssembly demo** - Functional in browser
+- 🚧 **Python implementation** - Core algorithms in development  
+- 🚧 **Rust implementation** - Performance optimization in progress
+- 📋 **Package distribution** - PyPI/Crates.io packages planned
+
+**Try Now:**
+- **Live Demo**: [jhammant.github.io/datcom/](https://jhammant.github.io/datcom/) - Working WebAssembly interface
+- **Source Code**: Available in this repository for development/contribution
 
 ## 🏗️ Heritage & Modern Balance
 
-This project preserves the mathematical accuracy of the original algorithms while making them accessible through modern languages and deployment methods. Every calculation is validated against the original Fortran to ensure aerospace-grade accuracy.
+This project preserves the mathematical accuracy of the original algorithms while making them accessible through modern languages and deployment methods. Every calculation will be validated against the original Fortran to ensure aerospace-grade accuracy.
 
 **The goal:** Democratize aerospace analysis. A garage startup should have access to the same algorithms that Boeing uses.
 
@@ -185,18 +198,16 @@ Contributions welcome! This is about preserving and modernizing aerospace herita
 git clone https://github.com/jhammant/aircraft-datcom.git
 cd aircraft-datcom
 
-# Python development
+# Python development (when ready)
 cd datcom-python
+pip install -r requirements.txt
 pip install -e .
-pytest tests/
+# pytest tests/  # When test suite is complete
 
-# Rust development  
+# Rust development (when ready)  
 cd datcom-rs
-cargo test
-cargo bench
-
-# WebAssembly build
-wasm-pack build --target web
+# cargo test    # When implementation is complete
+# cargo bench   # Performance benchmarks
 ```
 
 ### Contribution Guidelines
@@ -207,7 +218,7 @@ wasm-pack build --target web
 
 ## 📊 Validation & Testing
 
-All implementations are validated against:
+All implementations will be validated against:
 - Original Fortran reference calculations
 - Published test cases from USAF documentation  
 - Known aircraft configurations (F-16, Cessna 172, etc.)
@@ -228,11 +239,9 @@ The mathematical foundations of aerospace engineering should be free and accessi
 
 ## 🔗 Links
 
-- **Live Demo**: [jhammant.github.io/datcom/](https://jhammant.github.io/datcom/)
-- **Documentation**: [Full API Documentation](docs/)
-- **Heritage Info**: [Historical Background](docs/heritage.md)
-- **PyPI Package**: `pip install aircraft-datcom`
-- **Crates.io**: `cargo add aircraft-datcom-rs`
+- **Live Demo**: [jhammant.github.io/datcom/](https://jhammant.github.io/datcom/) ← **Try it now!**
+- **Documentation**: [Full project documentation](docs/) (in development)
+- **Heritage Info**: [Historical background](docs/heritage.md) (planned)
 
 ---
 
